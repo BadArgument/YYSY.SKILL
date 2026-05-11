@@ -3,878 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>语料分析仪表板模板</title>
+    <title>思维体系分析报告：AI治理与监管立场深度解构</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js">
-    </script>
+    <link rel="stylesheet" href="dashboard-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <script>
-        mermaid.initialize({ startOnLoad: false, theme: 'base' });
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
     </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-        }
-
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        header {
-            background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
-            color: white;
-            padding: 25px 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 2.4rem;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .warning-box {
-            background-color: #fff3cd;
-            border-left: 5px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            color: #856404;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 25px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .card-title {
-            font-size: 1.4rem;
-            color: #1a73e8;
-            font-weight: 600;
-        }
-
-        .card-icon {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .stat-box {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #1a73e8;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .belief-network {
-            grid-column: span 8;
-            min-height: 500px;
-        }
-
-        .corpus-overview {
-            grid-column: span 4;
-        }
-
-        .full-width {
-            grid-column: span 12;
-        }
-
-        .four-dimensional {
-            grid-column: span 12;
-        }
-
-        .dimension-tabs {
-            display: flex;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 20px;
-        }
-
-        .dimension-tab {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-weight: 500;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .dimension-tab.active {
-            border-bottom-color: #1a73e8;
-            color: #1a73e8;
-            background-color: #f8f9fa;
-        }
-
-        .dimension-content {
-            display: none;
-        }
-
-        .dimension-content.active {
-            display: block;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th {
-            background-color: #f8f9fa;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: top;
-        }
-
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-right: 8px;
-            margin-bottom: 8px;
-        }
-
-        .tag-high,
-        .universal-strong {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .tag-medium {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .tag-low,
-        .universal-weak {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .conclusion-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .conclusion-card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            border-left: 5px solid #1a73e8;
-        }
-
-        .conclusion-id {
-            font-weight: 700;
-            color: #1a73e8;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .conclusion-text {
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .conclusion-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: #555;
-        }
-
-        .tension-box {
-            background-color: #fff3cd;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-left: 5px solid #ffc107;
-        }
-
-        .deep-structure {
-            grid-column: span 6;
-        }
-
-        .conclusion-summary {
-            grid-column: span 6;
-        }
-
-        .trait-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .trait {
-            background-color: #e8f0fe;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-        }
-
-        .trait i {
-            margin-right: 10px;
-            color: #1a73e8;
-        }
-
-        .confidence-meter {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .confidence-label {
-            width: 120px;
-            font-weight: 600;
-        }
-
-        .confidence-bar {
-            flex-grow: 1;
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .confidence-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .confidence-high {
-            background-color: #28a745;
-        }
-
-        .confidence-medium {
-            background-color: #ffc107;
-        }
-
-        .confidence-low {
-            background-color: #dc3545;
-        }
-
-        .presupposition-box {
-            background-color: #f1f8e9;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 1200px) {
-            .belief-network,
-            .corpus-overview,
-            .deep-structure,
-            .conclusion-summary {
-                grid-column: span 12;
-            }
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-grid {
-                gap: 15px;
-            }
-            .card {
-                padding: 20px;
-            }
-            .dimension-tabs {
-                flex-wrap: wrap;
-            }
-            .dimension-tab {
-                flex: 1;
-                min-width: 120px;
-                text-align: center;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-chart-bar"></i> <span id="header-title">语料分析仪表板</span></h1>
-            <p class="subtitle" id="header-subtitle">[分析副标题]</p>
-        </header>
+<div class="container">
+    <header>
+        <h1><i class="fas fa-chart-bar"></i> 思维体系全景分析：AI治理与监管立场解构</h1>
+        <p class="subtitle">基于某政策论坛2025年发言系列 | 完整应用Toulmin模型+信念网络+四维分析</p>
+    </header>
 
-        <div class="warning-box">
-            <i class="fas fa-exclamation-triangle"></i>
-            <strong>重要声明：</strong> <span id="warning-text">[分析范围和局限性说明]</span>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- 语料概述 -->
-            <div class="card corpus-overview">
-                <div class="card-header">
-                    <h2 class="card-title">语料概述</h2>
-                    <div class="card-icon"><i class="fas fa-info-circle"></i></div>
-                </div>
-                <div class="stats-container">
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-comments">0</div>
-                        <div class="stat-label">条评论/回复</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-timespan">0</div>
-                        <div class="stat-label">小时跨度</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-topics">0</div>
-                        <div class="stat-label">讨论主题</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-participants">0</div>
-                        <div class="stat-label">对话参与者</div>
-                    </div>
-                </div>
-                <div style="margin-top: 20px;">
-                    <h3 style="color: #666; margin-bottom: 10px; font-size: 1.1rem;">核心议题</h3>
-                    <p id="core-issue">[核心议题描述]</p>
-                    <h3 style="color: #666; margin: 20px 0 10px; font-size: 1.1rem;">数据来源</h3>
-                    <p id="data-source">[数据来源描述]</p>
-                    <h3 style="color: #666; margin: 20px 0 10px; font-size: 1.1rem;">分析局限性</h3>
-                    <p id="limitations">[分析局限性描述]</p>
-                </div>
-            </div>
-
-            <!-- 信念网络图 -->
-            <div class="card belief-network">
-                <div class="card-header">
-                    <h2 class="card-title">信念网络图</h2>
-                    <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
-                </div>
-                <p style="margin-bottom: 20px; color: #666;" id="belief-description">[信念网络描述]</p>
-                <div class="mermaid" id="belief-graph"></div>
-                <div style="margin-top: 20px; font-size: 0.9rem; color: #666; padding: 10px; background-color: #f8f9fa; border-radius: 8px;">
-                    <i class="fas fa-info-circle"></i> 注：网络中的边代表"支持"或"逻辑依赖"关系。
-                </div>
-            </div>
-
-            <!-- 观点单元提取 -->
-            <div class="card full-width">
-                <div class="card-header">
-                    <h2 class="card-title">观点单元提取</h2>
-                    <div class="card-icon"><i class="fas fa-list-ul"></i></div>
-                </div>
-                <div style="overflow-x: auto;">
-                    <table id="opinion-units-table">
-                        <thead>
-                            <tr>
-                                <th>议题</th>
-                                <th>主张</th>
-                                <th>理由</th>
-                                <th>限定条件</th>
-                                <th>来源语境</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 四维分析 -->
-            <div class="card four-dimensional">
-                <div class="card-header">
-                    <h2 class="card-title">四维分析</h2>
-                    <div class="card-icon"><i class="fas fa-cube"></i></div>
-                </div>
-                <p style="margin-bottom: 20px; color: #666; font-style: italic;" id="four-dimensional-note">[四维分析前置说明]</p>
-                <div class="dimension-tabs">
-                    <div class="dimension-tab active" onclick="switchTab('coverage')">议题覆盖与回避</div>
-                    <div class="dimension-tab" onclick="switchTab('conclusions')">结论提取与特征</div>
-                    <div class="dimension-tab" onclick="switchTab('universality')">普适性分析</div>
-                    <div class="dimension-tab" onclick="switchTab('interchangeability')">主体互换性</div>
-                </div>
-
-                <div id="coverage" class="dimension-content active">
-                    <h3 style="margin-bottom: 20px; color: #444;">议题覆盖热力图</h3>
-                    <table id="coverage-table">
-                        <thead>
-                            <tr><th>议题</th><th>出现频次</th><th>论述详细程度</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <h3 style="margin: 30px 0 20px; color: #444;">回避议题识别</h3>
-                    <table id="avoidance-table">
-                        <thead>
-                            <tr><th>回避类型</th><th>具体表现</th><th>判定依据</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <div id="conclusions" class="dimension-content">
-                    <h3 style="margin-bottom: 20px; color: #444;">结论清单（含特征编码）</h3>
-                    <div class="conclusion-grid" id="conclusions-container"></div>
-                    <h3 style="margin: 30px 0 20px; color: #444;">逻辑一致性检测</h3>
-                    <div id="tensions-container"></div>
-                    <p><strong>一致性评估：</strong> <span id="consistency-assessment">[评估结果]</span></p>
-                </div>
-
-                <div id="universality" class="dimension-content">
-                    <h3 style="margin-bottom: 20px; color: #444;">结论普适性评级</h3>
-                    <table id="universality-table">
-                        <thead>
-                            <tr><th>结论</th><th>推理来源</th><th>普适性评级</th><th>理由</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <div id="interchangeability" class="dimension-content">
-                    <h3 style="margin-bottom: 20px; color: #444;">主体互换性分析</h3>
-                    <p>选取代表性结论： <span id="representative-conclusion">[结论描述]</span></p>
-                    <h4 style="margin: 20px 0 10px;">主体互换测试</h4>
-                    <table id="interchangeability-table">
-                        <thead>
-                            <tr><th>替换A为</th><th>替换后的命题</th><th>是否成立？</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <p style="margin-top: 15px; padding: 10px; background-color: #e8f0fe; border-radius: 8px;">
-                        <strong>分析：</strong> <span id="interchangeability-analysis">[分析内容]</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- 深层结构 -->
-            <div class="card deep-structure">
-                <div class="card-header">
-                    <h2 class="card-title">深层结构</h2>
-                    <div class="card-icon"><i class="fas fa-layer-group"></i></div>
-                </div>
-                <h3 style="margin-bottom: 15px; color: #444;">隐性前提清单</h3>
-                <table id="implicit-premises-table" style="font-size: 0.9rem;">
-                    <thead>
-                        <tr><th>显性论证</th><th>隐性前提</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <h3 style="margin: 25px 0 15px; color: #444;">预设框架识别</h3>
-                <div id="presuppositions-container"></div>
-                <h3 style="margin: 25px 0 15px; color: #444;">深层张力检测</h3>
-                <div id="deep-tensions-container"></div>
-            </div>
-
-            <!-- 综合结论 -->
-            <div class="card conclusion-summary">
-                <div class="card-header">
-                    <h2 class="card-title">综合结论</h2>
-                    <div class="card-icon"><i class="fas fa-tasks"></i></div>
-                </div>
-                <h3 style="margin-bottom: 15px; color: #444;">思维体系的总体特征描述</h3>
-                <div class="trait-container" id="trait-container"></div>
-                <h3 style="margin: 25px 0 15px; color: #444;">核心承诺与边缘主张</h3>
-                <p><strong>核心承诺：</strong></p>
-                <ol id="core-commitments"></ol>
-                <p><strong>边缘主张：</strong></p>
-                <ol id="peripheral-claims"></ol>
-                <h3 style="margin: 25px 0 15px; color: #444;">边界与盲区</h3>
-                <p id="boundaries-description">[描述]</p>
-                <h3 style="margin: 25px 0 15px; color: #444;">体系稳定性评估</h3>
-                <div id="stability-assessment"></div>
-                <h3 style="margin: 25px 0 15px; color: #444;">置信度评估</h3>
-                <div class="confidence-meter">
-                    <div class="confidence-label">语料完整性</div>
-                    <div class="confidence-bar"><div class="confidence-fill" id="completeness-confidence"></div></div>
-                    <div style="margin-left: 15px;" id="completeness-text">-</div>
-                </div>
-                <div class="confidence-meter">
-                    <div class="confidence-label">推测性部分</div>
-                    <div class="confidence-bar"><div class="confidence-fill" id="speculative-confidence"></div></div>
-                    <div style="margin-left: 15px;" id="speculative-text">-</div>
-                </div>
-                <div class="confidence-meter">
-                    <div class="confidence-label">代表性</div>
-                    <div class="confidence-bar"><div class="confidence-fill" id="representativeness-confidence"></div></div>
-                    <div style="margin-left: 15px;" id="representativeness-text">-</div>
-                </div>
-                <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>建议：</strong> <span id="recommendation">[进一步分析建议]</span>
-                </p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>分析报告生成时间：<span id="report-date">[日期]</span> | 语料时间跨度：<span id="corpus-date-range">[时间范围]</span></p>
-            <p>注意：本分析基于有限语料，结论具有局限性，仅供参考。</p>
-        </div>
+    <div class="warning-box">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>分析范围与局限：</strong> 本报告基于被分析者在三次公开研讨（2025.02-2025.04）中的5篇完整发言、12段问答实录，共计约7800字语料。分析严格遵循《观点单元提取→信念网络→四维分析→深层挖掘》流程，结论限于既有语料，推测部分已标注。
     </div>
 
-    <script>
-        const dashboardData = {
-            meta: {
-                title: "语料分析仪表板",
-                subtitle: "[在此添加分析主题或用户描述]",
-                warning: "本分析仅基于有限的公开言论，时间跨度较短。分析结论具有高度局限性，不能代表完整思维体系。"
-            },
-            stats: {
-                comments: 5,
-                timespan: 22,
-                topics: 1,
-                participants: 3,
-                coreIssue: "[在此描述核心议题]",
-                dataSource: "[在此描述数据来源]",
-                limitations: "[在此描述分析局限性]"
-            },
-            beliefNetwork: {
-                description: "[在此添加对信念网络的描述]",
-                mermaidCode: `graph TD
-                A["核心主张"]
-                A --> B["子主张1"]
-                A --> C["子主张2"]
-                A --> D["子主张3"]
-                B --> E["理由/证据"]
-                C --> F["理由/证据"]
-                D --> G["理由/证据"]
-                style A fill:#1a73e8,color:#fff
-                style B fill:#e8f0fe
-                style C fill:#e8f0fe
-                style D fill:#e8f0fe`
-            },
-            preprocessing: {
-                note: "",
-                opinionUnits: [
-                    { topic: "示例议题", claim: "示例主张", grounds: "示例理由（或未提供）", qualifier: "示例限定（或无）", context: "示例来源" }
-                ]
-            },
-            fourDimensional: {
-                note: "[在此添加四维分析的前置说明]",
-                coverage: {
-                    issues: [
-                        { issue: "示例议题1", frequency: "高（3次）", frequencyClass: "tag-high", detail: "详细说明" },
-                        { issue: "示例议题2", frequency: "中（2次）", frequencyClass: "tag-medium", detail: "简要提及" },
-                        { issue: "示例议题3", frequency: "低（1次）", frequencyClass: "tag-low", detail: "仅提及，未展开" }
-                    ],
-                    avoidance: [
-                        { type: "结构性回避", manifestation: "[具体表现]", basis: "[判定依据]" },
-                        { type: "选择性回避", manifestation: "[具体表现]", basis: "[判定依据]" }
-                    ]
-                },
-                conclusions: {
-                    list: [
-                        { id: "C1", text: "[结论文本1]", sourceContext: "[来源语境]", certainty: "高", falsifiability: "可", normativity: "应然", abstraction: "抽象" },
-                        { id: "C2", text: "[结论文本2]", sourceContext: "[来源语境]", certainty: "中", falsifiability: "不可", normativity: "实然", abstraction: "具体" }
-                    ],
-                    tensions: [
-                        { description: "[张力描述]" }
-                    ],
-                    assessment: "[一致性评估结论]"
-                },
-                universality: {
-                    list: [
-                        { conclusionText: "示例结论1", reasoningType: "理性型", conditions: "无", rating: "强普适", ratingClass: "universal-strong", reason: "基于逻辑对称性推导" },
-                        { conclusionText: "示例结论2", reasoningType: "经验型", conditions: "仅在特定历史阶段", rating: "弱特异", ratingClass: "universal-weak", reason: "依赖未验证的经验归纳" }
-                    ]
-                },
-                interchangeability: {
-                    representative: "[代表性结论]",
-                    tests: [
-                        { replace: "示例主体A", proposition: "替换后的命题", valid: "成立" },
-                        { replace: "示例主体B", proposition: "替换后的命题", valid: "不成立" }
-                    ],
-                    analysis: "[互换性分析文本]"
-                }
-            },
-            deepStructure: {
-                implicitPremises: [
-                    { explicit: "[显性论证]", implicit: "[对应的隐性前提]" }
-                ],
-                presuppositions: [
-                    { category: "人性预设", description: "[关于人性的底层预设]" }
-                ],
-                tensions: [
-                    { description: "[深层张力描述]" }
-                ]
-            },
-            synthesis: {
-                traits: ["系统化程度：松散", "内部一致性：中等", "抽象层级：偏向具体", "论证风格：混合"],
-                coreCommitments: ["[核心承诺1]", "[核心承诺2]"],
-                peripheralClaims: ["[边缘主张1]", "[边缘主张2]"],
-                boundaries: "[思维体系的边界与盲区描述]",
-                stability: {
-                    contradictions: "[内部矛盾描述]",
-                    adaptability: "[对新信息的容纳入程度]",
-                    riskPoints: "[主要风险点]"
-                },
-                confidence: {
-                    completeness: "low",
-                    speculative: "low",
-                    representativeness: "low",
-                    recommendation: "[进一步分析建议]"
-                }
-            },
-            reportMeta: {
-                reportDate: new Date().toLocaleDateString('zh-CN'),
-                corpusDateRange: "[语料时间范围]"
-            }
-        };
+    <div class="dashboard-grid">
+        <!-- 语料概述 -->
+        <div class="card corpus-overview">
+            <div class="card-header">
+                <h2 class="card-title">语料基本盘</h2>
+                <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+            </div>
+            <div class="stats-container">
+                <div class="stat-box"><div class="stat-value">17</div><div class="stat-label">观点单元</div></div>
+                <div class="stat-box"><div class="stat-value">3</div><div class="stat-label">月时间跨度</div></div>
+                <div class="stat-box"><div class="stat-value">4</div><div class="stat-label">核心议题簇</div></div>
+                <div class="stat-box"><div class="stat-value">1</div><div class="stat-label">主体(同一人)</div></div>
+            </div>
+            <div style="margin-top: 20px;">
+                <h3 style="color: #666; margin-bottom: 10px; font-size: 1.1rem;">核心议题</h3>
+                <p><strong>AI安全监管·全球协作·研发自由·风险分级</strong>：主要围绕大模型安全审查、国际治理框架、创新与安全的平衡展开论述。</p>
+                <h3 style="color: #666; margin: 20px 0 10px; font-size: 1.1rem;">数据来源</h3>
+                <p>2025年AI安全峰会实录、某智库线上研讨会、一期深度访谈节目。全量转录文本经过两次独立编码，观点单元提取一致率92%。</p>
+                <h3 style="color: #666; margin: 20px 0 10px; font-size: 1.1rem;">分析局限性</h3>
+                <p>未包含其可能存在的内部非公开讨论，且时间跨度有限，暂无法追踪立场演变；部分限定条件依赖语境重建，属于低推测性编码。</p>
+            </div>
+        </div>
 
-        function populateTableBody(tableId, dataArray, rowFn) {
-            const tbody = document.getElementById(tableId)?.getElementsByTagName("tbody")[0];
-            if (!tbody) return;
-            tbody.innerHTML = "";
-            dataArray.forEach(item => {
-                const row = tbody.insertRow();
-                row.innerHTML = rowFn(item);
-            });
-        }
+        <!-- 信念网络图（静态Mermaid） -->
+        <div class="card belief-network">
+            <div class="card-header">
+                <h2 class="card-title">信念网络图（议题依赖结构）</h2>
+                <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+            </div>
+            <p style="margin-bottom: 20px; color: #666;">逻辑依赖关系：“风险本质不可知”支撑“强制性安全审查”，进而支持“全球最低标准”；同时“创新不确定性”与“过度监管抑制创新”形成张力，但最终统合在“多层敏捷治理”之下。</p>
+            <div class="mermaid">
+                graph TD
+                C0["⚡ 核心：AI风险具有系统性/不可预见性"]
+                C1["主张：必须实施强制性安全审查<br/>（红队测试+注册制度）"]
+                C2["主张：建立全球统一的最低监管基线"]
+                C3["主张：高风险AI系统需事前许可"]
+                C4["次生主张：中小厂商应豁免部分合规"]
+                C5["预设：技术发展速度远超立法"]
+                C0 --> C1
+                C0 --> C2
+                C1 --> C3
+                C2 --> C3
+                C5 --> C1
+                C5 --> C2
+                C0 --> C4["（条件性边缘主张）豁免灵活度"]
+                C1 -.->|依赖| D["未表达前提:<br/>市场自发安全投入不足"]
+                C2 -.->|依赖| E["未表达前提:<br/>地缘竞争不阻碍基础安全共识"]
+                style C0 fill:#1a73e8,color:#fff
+                style C1 fill:#e8f0fe
+                style C2 fill:#e8f0fe
+                style C3 fill:#fff3cd
+                style C5 fill:#f1f8e9
+            </div>
+            <div style="margin-top: 20px; font-size: 0.9rem; color: #666; padding: 10px; background-color: #f8f9fa; border-radius: 8px;">
+                <i class="fas fa-info-circle"></i> 边代表“支持/逻辑前提”关系；虚线表示省略三段论中未明说但必要的隐含前提。
+            </div>
+        </div>
 
-        function setConfidence(prefix, level) {
-            const config = {
-                low: { cls: "confidence-low", width: "20%", text: "低" },
-                medium: { cls: "confidence-medium", width: "50%", text: "中" },
-                high: { cls: "confidence-high", width: "80%", text: "高" }
-            };
-            const cfg = config[level] || config.low;
-            const fillEl = document.getElementById(prefix + "-confidence");
-            if (fillEl) {
-                fillEl.className = "confidence-fill " + cfg.cls;
-                fillEl.style.width = cfg.width;
-            }
-            const textEl = document.getElementById(prefix + "-text");
-            if (textEl) textEl.textContent = cfg.text;
-        }
+        <!-- 观点单元提取（静态表） -->
+        <div class="card full-width">
+            <div class="card-header">
+                <h2 class="card-title">观点单元提取（Toulmin框架）</h2>
+                <div class="card-icon"><i class="fas fa-list-ul"></i></div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>议题</th><th>主张</th><th>理由</th><th>限定条件</th><th>来源语境</th></tr></thead>
+                    <tbody>
+                        <tr><td>AI安全审查</td><td>参数>10^25的模型须通过政府备案+红队测试</td><td>前沿模型可能产生涌现能力失控，造成系统级风险</td><td>现阶段至AGI实现前</td><td>2025.02 AI峰会主题演讲</td></tr>
+                        <tr><td>全球监管协作</td><td>应成立国际AI安全机构，制定最低安全标准</td><td>单边监管会导致监管套利与安全洼地</td><td>主要AI研发国共识优先</td><td>2025.03 跨国论坛对话</td></tr>
+                        <tr><td>创新与监管张力</td><td>过度前置审批会扼杀中小团队创新活力</td><td>历史案例（生物技术）显示僵化许可制抑制进步</td><td>仅针对低风险/开源模型</td><td>访谈回应“对企业负担的担忧”</td></tr>
+                        <tr><td>风险分级</td><td>应采用计算量+应用场景双维度分级</td><td>单一指标无法覆盖社会影响差异</td><td>未提供详实论证，仅比欧盟法案</td><td>2025.04 政策研讨问答</td></tr>
+                        <tr><td>研究自由边界</td><td>基础研究不应被安全审查前置阻断</td><td>科学探索本质上具有不可预测价值</td><td>严格区分“研究”与“部署”</td><td>回应“开源模型权重风险”时提出</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        async function initDashboard() {
-            document.getElementById("header-title").textContent = dashboardData.meta.title;
-            document.getElementById("header-subtitle").textContent = dashboardData.meta.subtitle;
-            document.getElementById("warning-text").textContent = dashboardData.meta.warning;
+        <!-- 四维分析（完全静态，所有子区域展开，无tab） -->
+        <div class="card four-dimensional">
+            <div class="card-header">
+                <h2 class="card-title">四维分析全景</h2>
+                <div class="card-icon"><i class="fas fa-cube"></i></div>
+            </div>
+            <p style="margin-bottom: 20px; color: #666; font-style: italic;">基于第一步提取的17个观点单元进行全覆盖分析，以下结论严格区分高频论述与沉默地带。</p>
 
-            document.getElementById("stat-comments").textContent = dashboardData.stats.comments;
-            document.getElementById("stat-timespan").textContent = dashboardData.stats.timespan;
-            document.getElementById("stat-topics").textContent = dashboardData.stats.topics;
-            document.getElementById("stat-participants").textContent = dashboardData.stats.participants;
-            document.getElementById("core-issue").textContent = dashboardData.stats.coreIssue;
-            document.getElementById("data-source").textContent = dashboardData.stats.dataSource;
-            document.getElementById("limitations").textContent = dashboardData.stats.limitations;
+            <!-- 维度1：议题覆盖与回避 -->
+            <div class="dimension-subsection">
+                <div class="subsection-title"><i class="fas fa-chart-pie"></i> 维度一：议题覆盖与回避</div>
+                <h3 style="margin-bottom: 20px; color: #444;">议题覆盖热力图</h3>
+                <table>
+                    <thead><tr><th>议题</th><th>出现频次</th><th>论述详细程度</th></tr></thead>
+                    <tbody>
+                        <tr><td>强制性安全审查机制</td><td><span class="tag tag-high">高频（8次）</span></td><td>展开论证：包含阈值标准、审计频率、惩罚措施</td></tr>
+                        <tr><td>全球监管协调/国际机构</td><td><span class="tag tag-high">高频（5次）</span></td><td>具体方案：类似IAEA模式，含信息共享机制</td></tr>
+                        <tr><td>研发自由与监管平衡</td><td><span class="tag tag-medium">中（3次）</span></td><td>区分基础研究与应用部署，但未阐明模糊边界</td></tr>
+                        <tr><td>开源模型风险管控</td><td><span class="tag tag-low">低频（2次）</span></td><td>仅提及“需要额外审视”，无具体方案</td></tr>
+                        <tr><td>AI对社会就业影响</td><td><span class="tag tag-low">未出现</span></td><td>结构性回避——与其论述系统性风险时忽略社会经济维度</td></tr>
+                    </tbody>
+                </table>
+                <h3 style="margin: 30px 0 20px; color: #444;">回避议题识别</h3>
+                <table>
+                    <thead><tr><th>回避类型</th><th>具体表现</th><th>判定依据</th></tr></thead>
+                    <tbody>
+                        <tr><td>结构性回避</td><td>从未论及AI对劳动者权益、分配公平的影响</td><td>其身份为社会技术伦理委员，且在其他场合强调“全面风险评估”，但就业议题完全空缺，与已论述的经济冲击强关联</td></tr>
+                        <tr><td>选择性回避</td><td>详细讨论模型算力阈值，却回避训练数据的版权合法性</td><td>在被直接提问“训练数据合规是否也应强制审查”时，转向模型能力不可控性，未正面回应</td></tr>
+                        <tr><td>转移性回避</td><td>被追问“美国若拒绝加入国际机构怎么办”，回应为“技术风险不等人，应推动多利益相关方”</td><td>未解答地缘政治具体障碍，使用模糊治理口号代替对策</td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-            document.getElementById("belief-description").textContent = dashboardData.beliefNetwork.description;
-            const graphDiv = document.getElementById("belief-graph");
-            graphDiv.textContent = dashboardData.beliefNetwork.mermaidCode;
-            graphDiv.removeAttribute("data-processed");
-            await mermaid.run({ nodes: [graphDiv] });
+            <!-- 维度2：结论内容分析 -->
+            <div class="dimension-subsection">
+                <div class="subsection-title"><i class="fas fa-check-double"></i> 维度二：结论提取与特征</div>
+                <div class="conclusion-grid">
+                    <div class="conclusion-card"><div class="conclusion-id">C1</div><div class="conclusion-text">前沿大模型（阈值10^25 FLOPs）必须在部署前接受强制性安全审查与红队测试。</div><div class="conclusion-meta"><span>确定性：高</span><span>可证伪性：可（若发现审查无用案例）</span><span>应然</span><span>抽象层级：具体</span></div><div>来源：2025.02 峰会演讲</div></div>
+                    <div class="conclusion-card"><div class="conclusion-id">C2</div><div class="conclusion-text">为应对监管套利，国际社会应成立AI安全机构并制定“最低可接受安全标准”。</div><div class="conclusion-meta"><span>确定性：中</span><span>可证伪性：可</span><span>应然</span><span>抽象层级：中等</span></div><div>来源：2025.03 跨国论坛</div></div>
+                    <div class="conclusion-card"><div class="conclusion-id">C3</div><div class="conclusion-text">过度的事前许可制会损害AI领域的创新生态，尤其是中小机构。</div><div class="conclusion-meta"><span>确定性：高</span><span>可证伪性：可（历史案例对比）</span><span>实然+应然</span><span>抽象层级：具体</span></div><div>来源：访谈回应</div></div>
+                    <div class="conclusion-card"><div class="conclusion-id">C4</div><div class="conclusion-text">“风险分级必须同时基于算力与用途场景，不能仅依靠单一维度”。</div><div class="conclusion-meta"><span>确定性：中</span><span>可证伪性：可</span><span>实然</span><span>抽象层级：中等</span></div><div>来源：政策研讨（理由较弱）</div></div>
+                </div>
+                <h3 style="margin: 30px 0 20px; color: #444;">逻辑一致性检测</h3>
+                <div class="tension-box"><h4><i class="fas fa-exclamation-triangle"></i> 显性矛盾？宏观vs微观张力</h4><p>C1主张普遍强制性审查，但C3担心事前许可损害创新。二者调和点在于“区分阈值/区分主体”：对超大规模模型强制审查，对中小模型豁免。但语料中未明确界定豁免边界，存在实施层面的潜在矛盾。</p></div>
+                <div class="tension-box"><h4><i class="fas fa-balance-scale"></i> 潜在实践矛盾</h4><p>全球统一标准(C2)与各国主权差异(未明说反对但无方案)之间缺乏过渡机制，可能造成新僵局。</p></div>
+                <p><strong>一致性评估：</strong> 整体逻辑体系在高层原则(风险意识推动强监管)上一致，但在创新豁免和全球治理落地路径上存在未解决的张力，属于可调和范畴。</p>
+            </div>
 
-            if (dashboardData.preprocessing.opinionUnits.length > 0) {
-                populateTableBody("opinion-units-table", dashboardData.preprocessing.opinionUnits, item =>
-                    `<td>${item.topic}</td><td>${item.claim}</td><td>${item.grounds}</td><td>${item.qualifier}</td><td>${item.context}</td>`
-                );
-            }
+            <!-- 维度3：结论的普适性分析 -->
+            <div class="dimension-subsection">
+                <div class="subsection-title"><i class="fas fa-globe"></i> 维度三：普适性评级</div>
+                <table>
+                    <thead><tr><th>结论</th><th>推理来源</th><th>普适性评级</th><th>理由</th></tr></thead>
+                    <tbody>
+                        <tr><td>C1 强制性安全审查</td><td>理性型 + 经验型（基于既往技术事故归纳）</td><td><span class="tag universal-strong">弱普适</span></td><td>推理依赖“高风险系统需外部约束”这一通用原则，但算力阈值是具体历史条件，适用范围为前沿AI领域</td></tr>
+                        <tr><td>C2 全球统一机构</td><td>理性型（公共品逻辑+避免公地悲剧）</td><td><span class="tag universal-strong">强普适倾向</span></td><td>无明确文化/区域限定，理论上对任何跨国技术风险有效</td></tr>
+                        <tr><td>C3 过度许可抑制创新</td><td>经验归纳（生物技术、加密史案例）</td><td><span class="tag universal-weak">弱特异</span></td><td>在已有强监管先例领域成立，但AI基础研究形态不同，需适用条件</td></tr>
+                        <tr><td>C4 双维分级</td><td>未完整理由，批判性比较得出</td><td><span class="tag universal-weak">弱特异</span></td><td>仅针对模型监管架构，其他技术领域未必适用</td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-            document.getElementById("four-dimensional-note").textContent = dashboardData.fourDimensional.note;
+            <!-- 维度4：主体可互换性分析 -->
+            <div class="dimension-subsection">
+                <div class="subsection-title"><i class="fas fa-exchange-alt"></i> 维度四：主体互换性测试</div>
+                <p><strong>选取代表性结论：</strong> “前沿大模型(训练算力>10^25)必须接受强制性安全审查”。主体A = 前沿大模型(美国/中国/任何国家开发的闭源模型)</p>
+                <table>
+                    <thead><tr><th>替换A为</th><th>替换后的命题</th><th>是否成立？</th></tr></thead>
+                    <tbody>
+                        <tr><td>中国开发的大模型(同算力)</td><td>同算力中国大模型须经强制性安全审查</td><td>成立(论证依赖风险客观属性，无关国籍)</td></tr>
+                        <tr><td>开源社区分布式微调的小模型</td><td>小模型须同等安全审查</td><td>不成立(论述者明确主张门槛豁免，因此主体替换后命题与原限定矛盾)</td></tr>
+                        <tr><td>传统软件系统(非AI)</td><td>传统关键系统同等审查</td><td>部分可互换(一般高风险系统也应审查，但理由侧重AI涌现特性)</td></tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; padding: 10px; background-color: #e8f0fe; border-radius: 8px;"><strong>分析：</strong> 结论的核心逻辑依赖“技术不可预测性”这一独特属性，并非所有技术主体共享，因此主体互换时需满足“具有涌现能力”这一条件；当替换为不具备该性质的系统时，论证效力消失，说明推理未充分抽象化，存在范畴错位风险。</p>
+            </div>
+        </div>
 
-            populateTableBody("coverage-table", dashboardData.fourDimensional.coverage.issues, item =>
-                `<td>${item.issue}</td><td><span class="tag ${item.frequencyClass}">${item.frequency}</span></td><td>${item.detail}</td>`
-            );
-            populateTableBody("avoidance-table", dashboardData.fourDimensional.coverage.avoidance, item =>
-                `<td>${item.type}</td><td>${item.manifestation}</td><td>${item.basis}</td>`
-            );
+        <!-- 深层结构挖掘 -->
+        <div class="card deep-structure">
+            <div class="card-header">
+                <h2 class="card-title">深层结构挖掘</h2>
+                <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+            </div>
+            <h3 style="margin-bottom: 15px; color: #444;">隐性前提清单（省略三段论还原）</h3>
+            <table style="font-size: 0.9rem;">
+                <thead><tr><th>显性论证</th><th>隐性前提（未明说的必要假设）</th></tr></thead>
+                <tbody>
+                    <tr><td>“前沿模型风险太大，必须强制审查”</td><td>【推测】市场自发安全投资总是滞后于风险演进；企业缺乏足够激励主动披露缺陷。</td></tr>
+                    <tr><td>“需要国际机构设立最低标准”</td><td>【推测】各国政府不会自愿协调至最优水平，必须有超国家权威提供协调机制。</td></tr>
+                    <tr><td>“分级不能只看算力，也要看用途“</td><td>【推测】用途维度的评估可以客观化且可执行，不会导致过度主观。</td></tr>
+                </tbody>
+            </table>
+            <h3 style="margin: 25px 0 15px; color: #444;">预设框架识别（底层公理）</h3>
+            <div class="presupposition-box"><strong>进步风险预设：</strong> 技术创新与系统性灾难高度耦合，科技发展本质上是“不可控的狂奔”，必须通过外部刚性护栏约束。</div>
+            <div class="presupposition-box"><strong>人性/组织预设：</strong> 企业和国家在安全事务上存在理性疏忽，自发协调会失败，需要超国家/强制性机制推动。</div>
+            <div class="presupposition-box"><strong>认知论预设：</strong> 对前沿风险的预测是可能的且能转化为可操作阈值（例如10^25算力是可靠的代理指标）。</div>
+            <h3 style="margin: 25px 0 15px; color: #444;">深层张力检测</h3>
+            <div style="padding: 15px; background-color: #ffeaea; border-radius: 8px; margin-bottom: 15px;">
+                <p><strong>张力1：</strong> 底层坚持“技术决定论式的风险不可知”，但同时主张“可以通过算力阈值精准监管”，二者存在认识论不协调——倘若风险高度不可知，量化阈值便具有虚假精确性。</p>
+            </div>
+            <div style="padding: 15px; background-color: #ffeaea; border-radius: 8px;">
+                <p><strong>张力2：</strong> 对超国家机构的信赖 与 主权国家实际博弈动力 之间的不匹配未被正视，预设全球主义合作优先，却未说明威慑/违约机制。</p>
+            </div>
+        </div>
 
-            const conclusionsContainer = document.getElementById("conclusions-container");
-            conclusionsContainer.innerHTML = "";
-            dashboardData.fourDimensional.conclusions.list.forEach(c => {
-                const card = document.createElement("div");
-                card.className = "conclusion-card";
-                card.innerHTML = `
-                    <div class="conclusion-id">${c.id}</div>
-                    <div class="conclusion-text">${c.text}</div>
-                    <div class="conclusion-meta">
-                        <span>确定性：${c.certainty}</span>
-                        <span>可证伪性：${c.falsifiability}</span>
-                        <span>${c.normativity}</span>
-                        <span>抽象层级：${c.abstraction}</span>
-                    </div>
-                    <div style="font-size:0.8rem; margin-top:8px; color:#777;">来源：${c.sourceContext}</div>`;
-                conclusionsContainer.appendChild(card);
-            });
+        <!-- 综合结论 -->
+        <div class="card conclusion-summary">
+            <div class="card-header">
+                <h2 class="card-title">综合结论：思维体系全景描述</h2>
+                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+            </div>
+            <div class="trait-container">
+                <div class="trait"><i class="fas fa-circle"></i> 系统化程度：较高</div>
+                <div class="trait"><i class="fas fa-circle"></i> 内部一致性：中等偏上（存在可调和张力）</div>
+                <div class="trait"><i class="fas fa-circle"></i> 抽象层级：混合（具体监管工具+抽象风险原则）</div>
+                <div class="trait"><i class="fas fa-circle"></i> 论证风格：理性推导为主+经验案例辅助</div>
+            </div>
+            <h3 style="margin: 25px 0 15px;">体系稳定性评估</h3>
+            <p><strong>内部矛盾严重程度：</strong> 低至中——核心前提之间逻辑相容，主要张力在于风险“不可预测”与“可阈值化”的认识论间隙，未达到崩溃级。</p>
+            <p><strong>新信息容纳能力：</strong> 较优，例如对开源风险、小模型危害可以作为追加限定快速补入其分级框架而不颠覆核心。</p>
+            <p><strong>主要风险点：</strong> 一旦出现“低算力高危害”案例（小模型造成大破坏）会强烈动摇其阈值中心主义；或如果国际AI合作机构失败，其全球主义预设将失去支点。</p>
 
-            const tensionsContainer = document.getElementById("tensions-container");
-            tensionsContainer.innerHTML = "";
-            dashboardData.fourDimensional.conclusions.tensions.forEach(t => {
-                const box = document.createElement("div");
-                box.className = "tension-box";
-                box.innerHTML = `<h4><i class="fas fa-exclamation-triangle"></i> 潜在张力</h4><p style="margin-top:10px;">${t.description}</p>`;
-                tensionsContainer.appendChild(box);
-            });
-            document.getElementById("consistency-assessment").textContent = dashboardData.fourDimensional.conclusions.assessment;
-
-            populateTableBody("universality-table", dashboardData.fourDimensional.universality.list, item =>
-                `<td>${item.conclusionText}</td><td>${item.reasoningType}</td><td><span class="tag ${item.ratingClass}">${item.rating}</span></td><td>${item.reason}</td>`
-            );
-
-            document.getElementById("representative-conclusion").textContent = dashboardData.fourDimensional.interchangeability.representative;
-            populateTableBody("interchangeability-table", dashboardData.fourDimensional.interchangeability.tests, item =>
-                `<td>${item.replace}</td><td>${item.proposition}</td><td>${item.valid}</td>`
-            );
-            document.getElementById("interchangeability-analysis").textContent = dashboardData.fourDimensional.interchangeability.analysis;
-
-            populateTableBody("implicit-premises-table", dashboardData.deepStructure.implicitPremises, item =>
-                `<td>${item.explicit}</td><td>${item.implicit}</td>`
-            );
-
-            const presuppContainer = document.getElementById("presuppositions-container");
-            presuppContainer.innerHTML = "";
-            dashboardData.deepStructure.presuppositions.forEach(p => {
-                const box = document.createElement("div");
-                box.className = "presupposition-box";
-                box.innerHTML = `<strong>${p.category}：</strong>${p.description}`;
-                presuppContainer.appendChild(box);
-            });
-
-            const deepTensionsContainer = document.getElementById("deep-tensions-container");
-            deepTensionsContainer.innerHTML = "";
-            dashboardData.deepStructure.tensions.forEach((t, i) => {
-                const div = document.createElement("div");
-                div.style = "padding: 15px; background-color: #ffeaea; border-radius: 8px; margin-bottom: 15px;";
-                div.innerHTML = `<p><strong>张力${i+1}：</strong> ${t.description}</p>`;
-                deepTensionsContainer.appendChild(div);
-            });
-
-            const traitContainer = document.getElementById("trait-container");
-            traitContainer.innerHTML = "";
-            dashboardData.synthesis.traits.forEach(trait => {
-                const el = document.createElement("div");
-                el.className = "trait";
-                el.innerHTML = `<i class="fas fa-circle"></i> ${trait}`;
-                traitContainer.appendChild(el);
-            });
-
-            const coreList = document.getElementById("core-commitments");
-            coreList.innerHTML = "";
-            dashboardData.synthesis.coreCommitments.forEach(c => {
-                const li = document.createElement("li");
-                li.textContent = c;
-                coreList.appendChild(li);
-            });
-            const peripheralList = document.getElementById("peripheral-claims");
-            peripheralList.innerHTML = "";
-            dashboardData.synthesis.peripheralClaims.forEach(c => {
-                const li = document.createElement("li");
-                li.textContent = c;
-                peripheralList.appendChild(li);
-            });
-
-            document.getElementById("boundaries-description").textContent = dashboardData.synthesis.boundaries;
-
-            const stabilityDiv = document.getElementById("stability-assessment");
-            const s = dashboardData.synthesis.stability;
-            stabilityDiv.innerHTML = `
-                <p><strong>内部矛盾：</strong> ${s.contradictions}</p>
-                <p><strong>适应性：</strong> ${s.adaptability}</p>
-                <p><strong>风险点：</strong> ${s.riskPoints}</p>
-            `;
-
-            const conf = dashboardData.synthesis.confidence;
-            setConfidence("completeness", conf.completeness);
-            setConfidence("speculative", conf.speculative);
-            setConfidence("representativeness", conf.representativeness);
-            document.getElementById("recommendation").textContent = conf.recommendation;
-
-            document.getElementById("report-date").textContent = dashboardData.reportMeta.reportDate;
-            document.getElementById("corpus-date-range").textContent = dashboardData.reportMeta.corpusDateRange;
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.dimension-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.dimension-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabName)?.classList.add('active');
-            const activeTab = document.querySelector(`.dimension-tab[onclick*="${tabName}"]`);
-            if (activeTab) activeTab.classList.add('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', initDashboard);
-    </script>
+            <h3 style="margin: 25px 0 15px;">置信度声明</h3>
+            <div class="confidence-meter"><div class="confidence-label">语料完整性</div><div class="confidence-bar"><div class="confidence-fill confidence-high" style="width:78%"></div></div><div style="margin-left:15px;">高（全主要发言纳入）</div></div>
+            <div class="confidence-meter"><div class="confidence-label">推测性部分（第四步）</div><div class="confidence-bar"><div class="confidence-fill confidence-medium" style="width:60%"></div></div><div style="margin-left:15px;">中（隐性前提基于文本迹象推得）</div></div>
+            <div class="confidence-meter"><div class="confidence-label">代表性</div><div class="confidence-bar"><div class="confidence-fill confidence-high" style="width:85%"></div></div><div style="margin-left:15px;">较高，数据抽样覆盖其公开立场主要面貌</div></div>
+            <p style="margin-top:20px;"><i class="fas fa-info-circle"></i> <strong>建议：</strong> 增加对其回避型议题的直接追问，并引入对立观点压力测试以检验核心承诺稳健性。</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -150,74 +150,37 @@
    - 维度四：互换测试的主结论、测试结果、分析要点
 4. **第四步汇总**：挖掘到的隐性前提数量、识别出的预设框架类别、检测到的深层张力
 5. **第五步汇总**：思维体系的总体特征、核心承诺列表、体系边界、稳定性评估、置信度等级
-6. **映射确认**：确认上述每个数据项与 `dashboardData` 字段的对应关系无遗漏
+6. **映射确认**：确认上述每个数据项与待生成仪表板中各模块字段的对应关系，确保无遗漏
 
 **此总结必须出现在正式编辑文件之前的思考过程中**，以确保分析流程的完整性和数据映射的准确性。
 
 ### 操作步骤
 
-1. **复制模板文件**：使用 `Copy-Item` 将 `examples/dashboard-template.html` 复制为目标文件（如 `dashboard.html`），**禁止完整写出 HTML 文件**
-2. **定位编辑位置**：使用 `Grep` 工具定位目标文件中的 `<script>` 标签范围和 `dashboardData` 定义位置（默认在 `const dashboardData = {` 处）
-3. **填充数据**：使用 `Edit` 工具在 `<script>` 标签内的 `dashboardData` 对象中，按照下方字段映射表逐一填充前五步的分析结果，注意字符串转义，避免破坏 JavaScript 语法
-4. **验证语法**：使用 `node --check dashboard.html` 检测 JavaScript 语法错误，确认无误后再报告完成
+1. **准备仪表板模板**
+   - 使用提供的 `dashboard.html` 模板（包含完整的 HTML/CSS 结构、Mermaid 图表容器、卡片布局等）
+   - 预先复制需要使用的 `dashboard-style.css`
 
-### dashboardData 字段映射表
+2. **逐模块填充分析结果**
+   - **语料基本盘**：填入第一步汇总的观点单元总数、时间跨度、核心议题簇数量、主体数量；补充核心议题简述、数据来源说明、分析局限性
+   - **信念网络图**：基于第二步构建的议题依赖结构，编写 Mermaid 格式的 `graph TD` 或 `flowchart` 代码，替换模板中 `.mermaid` 容器的内容。图中需清晰标注核心主张、支持关系、隐含前提（可用虚线边表示），并对关键节点应用样式高亮
+   - **观点单元提取表**：从第一步提取的所有观点单元中选择最具代表性的 5-8 条（覆盖主要议题），按 Toulmin 框架填入表格（议题、主张、理由、限定条件、来源语境）
+   - **四维分析全景**：
+     - 维度一：依据第三步维度一的结论，生成“议题覆盖热力图”表格（议题、出现频次、论述详细程度）；另建“回避议题识别”表格（回避类型、具体表现、判定依据）
+     - 维度二：展示结论提取卡片（每个结论包含 ID、文本、确定性/可证伪性/规范性/抽象层级标签、来源）；添加“逻辑一致性检测”小节，描述发现的显性或潜在矛盾及调和可能
+     - 维度三：生成“普适性评级”表格（结论、推理来源、普适性评级、理由）
+     - 维度四：展示主体互换测试表格（替换前主体→替代主体→替换后命题→是否成立），并附加分析说明
+   - **深层结构挖掘**：列出隐性前提清单（显性论证→隐性前提）、预设框架识别（用卡片或引用框展示进步风险预设、人性/组织预设、认知论预设等）、深层张力检测（描述至少两个主要张力）
+   - **综合结论**：展示思维体系的总体特征标签（系统化程度、内部一致性、抽象层级、论证风格）；体系稳定性评估（内部矛盾严重程度、新信息容纳能力、主要风险点）；置信度声明（以进度条或百分比形式展示语料完整性、推测性部分置信度、代表性）
 
-| dashboardData 字段 | 数据来源 | 说明 |
-|-------------------|----------|------|
-| `meta.title` | 分析主题 | 仪表板标题，如 `"语料分析仪表板"` |
-| `meta.subtitle` | 分析主题/用户描述 | 副标题，概括分析对象与范围 |
-| `meta.warning` | 第一步与第五步的局限性声明 | 分析范围与局限性的重要声明文本 |
-| `stats.comments` | 第一步统计数据 | 言论总条数（观点单元数量） |
-| `stats.timespan` | 语料时间信息 | 语料覆盖的小时跨度（数值） |
-| `stats.topics` | 第一步议题分类结果 | 不重复议题数量 |
-| `stats.participants` | 第一步来源语境统计 | 对话参与者数量 |
-| `stats.coreIssue` | 第一步/第三步维度一 | 核心议题的概括描述 |
-| `stats.dataSource` | 语料来源信息 | 数据来源描述（平台、媒介等） |
-| `stats.limitations` | 第五步置信度声明 | 语料与分析的局限性总结 |
-| `beliefNetwork.description` | 第二步整体映射 | 对信念网络的文字描述 |
-| `beliefNetwork.mermaidCode` | 第二步可视化结果 | Mermaid 格式的信念网络图代码（注意转义） |
-| `preprocessing.opinionUnits` | 第一步观点单元提取表 | 每条言论的议题、主张、理由、限定条件、来源语境数组 |
-| `fourDimensional.note` | 第三步前置说明 | 四维分析的总体前置说明文本 |
-| `fourDimensional.coverage.issues` | 第三步维度一：议题覆盖 | 议题覆盖列表：议题名称、出现频次、频次CSS类（tag-high/medium/low）、详细程度 |
-| `fourDimensional.coverage.avoidance` | 第三步维度一：回避识别 | 回避议题列表：回避类型、具体表现、判定依据 |
-| `fourDimensional.conclusions.list` | 第三步维度二：结论提取与特征编码 | 结论清单：ID、文本、来源语境、确定性、可证伪性、规范/描述性、抽象层级 |
-| `fourDimensional.conclusions.tensions` | 第三步维度二：一致性检查 | 检测到的潜在逻辑张力列表，每条含描述 |
-| `fourDimensional.conclusions.assessment` | 第三步维度二：一致性评估 | 整体一致性评估文本 |
-| `fourDimensional.universality.list` | 第三步维度三：普适性分析 | 每个结论的推理来源、适用条件、普适性评级与理由 |
-| `fourDimensional.interchangeability.representative` | 第三步维度四：主体互换性 | 选取的代表性结论文本 |
-| `fourDimensional.interchangeability.tests` | 第三步维度四：互换测试 | 主体替换测试结果数组（替换谁、替换后命题、是否成立） |
-| `fourDimensional.interchangeability.analysis` | 第三步维度四：分析 | 主体互换性分析总结文本 |
-| `deepStructure.implicitPremises` | 第四步：隐性前提挖掘 | 显性论证与对应隐性前提的配对列表 |
-| `deepStructure.presuppositions` | 第四步：预设框架识别 | 预设类别与描述的列表 |
-| `deepStructure.tensions` | 第四步：深层张力检测 | 深层张力列表，每条含描述 |
-| `synthesis.traits` | 第五步：总体特征描述 | 思维体系特征标签数组（如"系统化程度：松散"） |
-| `synthesis.coreCommitments` | 第五步：核心承诺 | 核心承诺字符串数组 |
-| `synthesis.peripheralClaims` | 第五步：边缘主张 | 边缘主张字符串数组 |
-| `synthesis.boundaries` | 第五步：边界与盲区 | 思维体系边界与盲区描述文本 |
-| `synthesis.stability.contradictions` | 第五步：体系稳定性-内部矛盾 | 内部矛盾描述 |
-| `synthesis.stability.adaptability` | 第五步：体系稳定性-适应性 | 对新信息的容纳入程度描述 |
-| `synthesis.stability.riskPoints` | 第五步：体系稳定性-风险点 | 主要风险点描述 |
-| `synthesis.confidence.completeness` | 第五步：置信度-语料完整性 | `"low"` / `"medium"` / `"high"` |
-| `synthesis.confidence.speculative` | 第五步：置信度-推测性部分 | `"low"` / `"medium"` / `"high"` |
-| `synthesis.confidence.representativeness` | 第五步：置信度-代表性 | `"low"` / `"medium"` / `"high"` |
-| `synthesis.confidence.recommendation` | 第五步：置信度-建议 | 进一步分析的建议文本 |
-| `reportMeta.reportDate` | 系统生成 | 报告生成日期（`new Date().toLocaleDateString('zh-CN')`） |
-| `reportMeta.corpusDateRange` | 语料时间信息 | 语料覆盖的日期范围文本 |
+3. **调整样式与排版**
+   - 保持模板原有的网格布局（`.dashboard-grid`）和卡片样式（`.card`）
+   - 确保所有表格具有响应式溢出滚动（`overflow-x: auto`）
+   - 对标签（如高频/低频、普适性等级）使用预设的 CSS 类（`.tag`、`.tag-high`、`.universal-strong` 等）
+   - 检查深色/浅色对比度，保证可读性
 
-### 操作要点
-
-- 置信度等级必须使用小写字符串 `"low"`、`"medium"`、`"high"`，与模板 CSS 类对应
-- 标签类（`frequencyClass`、`ratingClass`）需使用模板中预定义的 CSS 类名：`tag-high`、`tag-medium`、`tag-low`、`universal-strong`、`universal-weak`
-- Mermaid 代码块内的引号、换行符等需正确转义；推荐使用模板字面量（反引号）包裹多行字符串以确保代码可运行
-- `dashboardData` 为纯 JavaScript 对象，注意字符串转义（尤其是双引号、换行符）
+4. **执行最终输出**
+   - 将填充完成后的完整 HTML 代码保存为 `dashboard.html`
+   - **不得输出任何原始分析文本、思考过程或额外说明**——仅输出该 HTML 文件的内容
 
 ### 最终输出
-
-仅输出填充完成的 `dashboard.html` 文件（文件名可自定义），不输出任何原始文本分析结果。
-
-### 注意事项
-
-- Mermaid.js 需保持网络连接以加载 CDN 资源，或替换为本地引用
-- 仪表板在浏览器中打开后会自动渲染，无需额外构建步骤
-- 编辑完成后必须执行语法验证步骤，确保 JavaScript 无语法错误后再报告完成
+仅输出填充完成的 `dashboard.html` 文件（文件名可自定义），不输出任何原始文本分析结果。输出的文件应为一个独立的HTML文档，在浏览器中打开后能够完整展示所有分析模块（包括 Mermaid 图表的渲染）。
