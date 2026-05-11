@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语料分析仪表板模板</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            color: #856404;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #1a73e8;
+            font-weight: 600;
+        }
+        
+        .card-icon {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .belief-network {
+            grid-column: span 8;
+            min-height: 500px;
+        }
+        
+        .corpus-overview {
+            grid-column: span 4;
+        }
+        
+        .four-dimensional {
+            grid-column: span 12;
+        }
+        
+        .dimension-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        
+        .dimension-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .dimension-tab.active {
+            border-bottom-color: #1a73e8;
+            color: #1a73e8;
+            background-color: #f8f9fa;
+        }
+        
+        .dimension-content {
+            display: none;
+        }
+        
+        .dimension-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .tag-high {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .tag-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .tag-low {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .universal-strong {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .universal-weak {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .conclusion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .conclusion-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #1a73e8;
+        }
+        
+        .conclusion-id {
+            font-weight: 700;
+            color: #1a73e8;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .conclusion-text {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .conclusion-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .tension-box {
+            background-color: #fff3cd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .deep-structure {
+            grid-column: span 6;
+        }
+        
+        .conclusion-summary {
+            grid-column: span 6;
+        }
+        
+        .trait-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .trait {
+            background-color: #e8f0fe;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .trait i {
+            margin-right: 10px;
+            color: #1a73e8;
+        }
+        
+        .confidence-meter {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .confidence-label {
+            width: 120px;
+            font-weight: 600;
+        }
+        
+        .confidence-bar {
+            flex-grow: 1;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .confidence-high {
+            background-color: #28a745;
+            width: 80%;
+        }
+        
+        .confidence-medium {
+            background-color: #ffc107;
+            width: 50%;
+        }
+        
+        .confidence-low {
+            background-color: #dc3545;
+            width: 20%;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .belief-network, .corpus-overview, .deep-structure, .conclusion-summary {
+                grid-column: span 12;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                gap: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .dimension-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .dimension-tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-bar"></i> 语料分析仪表板</h1>
+            <p class="subtitle">[在此添加分析主题或用户描述]</p>
+        </header>
+        
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>重要声明：</strong> [在此添加分析范围和局限性说明]
+        </div>
+        
+        <div class="dashboard-grid">
+            <!-- 第一部分：语料概述 -->
+            <div class="card corpus-overview">
+                <div class="card-header">
+                    <h2 class="card-title">语料概述</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-comments">0</div>
+                        <div class="stat-label">条评论/回复</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-timespan">0</div>
+                        <div class="stat-label">小时跨度</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-topics">0</div>
+                        <div class="stat-label">讨论主题</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-participants">0</div>
+                        <div class="stat-label">对话参与者</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 1.1rem;">核心议题</h3>
+                    <p id="core-issue">[在此描述核心议题]</p>
+                    
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 1.1rem; margin-top: 20px;">数据来源</h3>
+                    <p id="data-source">[在此描述数据来源]</p>
+                    
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 1.1rem; margin-top: 20px;">分析局限性</h3>
+                    <p id="limitations">[在此描述分析局限性]</p>
+                </div>
+            </div>
+            
+            <!-- 第二部分：信念网络图 -->
+            <div class="card belief-network">
+                <div class="card-header">
+                    <h2 class="card-title">信念网络图</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                </div>
+                <p style="margin-bottom: 20px; color: #666;">[在此添加对信念网络的描述]</p>
+                <div class="mermaid" id="belief-graph">
+                    graph TD
+                    A["核心主张"]
+                    
+                    A --> B["子主张1"]
+                    A --> C["子主张2"]
+                    A --> D["子主张3"]
+                    
+                    B --> E["理由/证据"]
+                    C --> F["理由/证据"]
+                    D --> G["理由/证据"]
+                    
+                    style A fill:#1a73e8,color:#fff
+                    style B fill:#e8f0fe
+                    style C fill:#e8f0fe
+                    style D fill:#e8f0fe
+                </div>
+                <div style="margin-top: 20px; font-size: 0.9rem; color: #666; padding: 10px; background-color: #f8f9fa; border-radius: 8px;">
+                    <i class="fas fa-info-circle"></i> 注：网络中的边代表"支持"或"逻辑依赖"关系。您可以使用Mermaid语法自定义图表。
+                </div>
+            </div>
+            
+            <!-- 第三部分：四维分析 -->
+            <div class="card four-dimensional">
+                <div class="card-header">
+                    <h2 class="card-title">四维分析</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                </div>
+                <p style="margin-bottom: 20px; color: #666; font-style: italic;">
+                    [在此添加四维分析的前置说明]
+                </p>
+                
+                <div class="dimension-tabs">
+                    <div class="dimension-tab active" onclick="switchTab('coverage')">议题覆盖与回避</div>
+                    <div class="dimension-tab" onclick="switchTab('conclusions')">结论提取与特征</div>
+                    <div class="dimension-tab" onclick="switchTab('universality')">普适性分析</div>
+                    <div class="dimension-tab" onclick="switchTab('interchangeability')">主体互换性</div>
+                </div>
+                
+                <!-- 选项卡1：议题覆盖与回避 -->
+                <div id="coverage" class="dimension-content active">
+                    <h3 style="margin-bottom: 20px; color: #444;">议题覆盖热力图</h3>
+                    <table id="coverage-table">
+                        <thead>
+                            <tr>
+                                <th>议题</th>
+                                <th>出现频次</th>
+                                <th>论述详细程度</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>示例议题1</td>
+                                <td><span class="tag tag-high">高（3次）</span></td>
+                                <td>详细说明</td>
+                            </tr>
+                            <tr>
+                                <td>示例议题2</td>
+                                <td><span class="tag tag-medium">中（2次）</span></td>
+                                <td>简要提及</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3 style="margin: 30px 0 20px 0; color: #444;">回避议题识别</h3>
+                    <table id="avoidance-table">
+                        <thead>
+                            <tr>
+                                <th>回避类型</th>
+                                <th>具体表现</th>
+                                <th>判定依据</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>结构性回避</td>
+                                <td>[具体表现描述]</td>
+                                <td>[判定依据描述]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 选项卡2：结论提取与特征 -->
+                <div id="conclusions" class="dimension-content">
+                    <h3 style="margin-bottom: 20px; color: #444;">结论清单（从语料中提取）</h3>
+                    <div class="conclusion-grid" id="conclusions-container">
+                        <!-- 结论卡片将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 20px 0; color: #444;">逻辑一致性检测</h3>
+                    <div class="tension-box" id="tension-box">
+                        <h4><i class="fas fa-exclamation-triangle"></i> 潜在张力检测</h4>
+                        <p style="margin-top: 10px;" id="tension-description">[在此描述潜在逻辑张力]</p>
+                    </div>
+                    
+                    <p><strong>一致性评估：</strong> <span id="consistency-assessment">[在此描述一致性评估结果]</span></p>
+                </div>
+                
+                <!-- 选项卡3：普适性分析 -->
+                <div id="universality" class="dimension-content">
+                    <h3 style="margin-bottom: 20px; color: #444;">结论普适性评级</h3>
+                    <table id="universality-table">
+                        <thead>
+                            <tr>
+                                <th>结论</th>
+                                <th>推理来源</th>
+                                <th>普适性评级</th>
+                                <th>理由</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>示例结论1</td>
+                                <td>理性型</td>
+                                <td><span class="tag universal-strong">强普适</span></td>
+                                <td>基于逻辑对称性推导</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 选项卡4：主体互换性 -->
+                <div id="interchangeability" class="dimension-content">
+                    <h3 style="margin-bottom: 20px; color: #444;">主体互换性分析</h3>
+                    <p>选取最具代表性的结论 <span id="representative-conclusion">[结论描述]</span> 进行测试。</p>
+                    
+                    <h4 style="margin: 20px 0 10px 0;">主体互换测试</h4>
+                    <table id="interchangeability-table">
+                        <thead>
+                            <tr>
+                                <th>替换A为</th>
+                                <th>替换后的命题</th>
+                                <th>是否成立？</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>示例主体A</td>
+                                <td>替换后的命题</td>
+                                <td>成立/不成立</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 15px; padding: 10px; background-color: #e8f0fe; border-radius: 8px;">
+                        <strong>分析：</strong> <span id="interchangeability-analysis">[在此添加分析]</span>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 第四部分：深层结构与综合结论 -->
+            <div class="card deep-structure">
+                <div class="card-header">
+                    <h2 class="card-title">深层结构（推测性）</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px; padding: 10px; background-color: #fff3cd; border-radius: 8px;">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>警告：</strong> 此步基于有限的文本迹象进行推测，结论可靠性较低。
+                </div>
+                
+                <h3 style="margin-bottom: 15px; color: #444;">隐性前提清单</h3>
+                <table id="implicit-premises-table" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th>显性论证</th>
+                            <th>隐性前提（未明说但依赖）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>[显性论证示例]</td>
+                            <td>[对应的隐性前提]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #444;">深层张力检测</h3>
+                <div style="padding: 15px; background-color: #ffeaea; border-radius: 8px; margin-bottom: 15px;">
+                    <p><strong>张力1：</strong> <span id="tension-1">[在此描述第一处深层张力]</span></p>
+                </div>
+                <div style="padding: 15px; background-color: #ffeaea; border-radius: 8px;">
+                    <p><strong>张力2：</strong> <span id="tension-2">[在此描述第二处深层张力]</span></p>
+                </div>
+            </div>
+            
+            <!-- 第五部分：综合结论 -->
+            <div class="card conclusion-summary">
+                <div class="card-header">
+                    <h2 class="card-title">综合结论</h2>
+                    <div class="card-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                
+                <h3 style="margin-bottom: 15px; color: #444;">思维体系的总体特征描述</h3>
+                <div class="trait-container" id="trait-container">
+                    <!-- 特征标签将通过JavaScript动态生成 -->
+                </div>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #444;">核心承诺与边缘主张</h3>
+                <p><strong>核心承诺：</strong></p>
+                <ol id="core-commitments" style="margin-left: 20px; margin-bottom: 20px;">
+                    <!-- 核心承诺将通过JavaScript动态生成 -->
+                </ol>
+                
+                <p><strong>边缘主张：</strong></p>
+                <ol id="peripheral-claims" style="margin-left: 20px; margin-bottom: 20px;">
+                    <!-- 边缘主张将通过JavaScript动态生成 -->
+                </ol>
+                
+                <h3 style="margin: 25px 0 15px 0; color: #444;">置信度评估</h3>
+                <div class="confidence-meter">
+                    <div class="confidence-label">语料完整性</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="completeness-confidence"></div>
+                    </div>
+                    <div style="margin-left: 15px;" id="completeness-text">低</div>
+                </div>
+                
+                <div class="confidence-meter">
+                    <div class="confidence-label">推测性部分</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="speculative-confidence"></div>
+                    </div>
+                    <div style="margin-left: 15px;" id="speculative-text">低</div>
+                </div>
+                
+                <div class="confidence-meter">
+                    <div class="confidence-label">代表性</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="representativeness-confidence"></div>
+                    </div>
+                    <div style="margin-left: 15px;" id="representativeness-text">低</div>
+                </div>
+                
+                <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>建议：</strong> <span id="recommendation">[在此添加进一步分析的建议]</span>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>分析报告生成时间：<span id="report-date">[日期]</span> | 语料时间跨度：<span id="corpus-date-range">[时间范围]</span></p>
+            <p>注意：本分析基于有限语料，结论具有局限性，仅供参考。</p>
+        </div>
+    </div>
+
+    <script>
+        // 仪表板数据配置
+        const dashboardData = {
+            // 基本元数据
+            title: "语料分析仪表板",
+            subtitle: "在此描述分析的主题和范围",
+            warning: "本分析仅基于有限的公开言论，时间跨度较短。分析结论具有高度局限性，不能代表完整思维体系，仅反映局部观点和论证风格。",
+            
+            // 语料概述数据
+            stats: {
+                comments: 5,
+                timespan: 22,
+                topics: 1,
+                participants: 3
+            },
+            coreIssue: "在此描述核心议题",
+            dataSource: "在此描述数据来源",
+            limitations: "语料稀少且集中于单一议题，未获取历史发言、其他主题言论或完整个人资料",
+            
+            // 四维分析数据
+            coverageData: [
+                { issue: "示例议题1", frequency: "高（3次）", frequencyClass: "tag-high", detail: "详细说明" },
+                { issue: "示例议题2", frequency: "中（2次）", frequencyClass: "tag-medium", detail: "简要提及" },
+                { issue: "示例议题3", frequency: "低（1次）", frequencyClass: "tag-low", detail: "仅提及，未展开" }
+            ],
+            
+            avoidanceData: [
+                { type: "结构性回避", manifestation: "未对关键统计数据提供来源、方法学或解释", basis: "该数据被用作论证武器，但未说明其因果关联是否成立" },
+                { type: "选择性回避", manifestation: "在批评对方时，未正面回应对方可能持有的核心观点", basis: "对方用类比讨论统计显著性，里慈将其简化为全称判断并批评，回避了统计差异的可能性" }
+            ],
+            
+            // 结论数据
+            conclusions: [
+                { id: "C1", text: "在此添加结论文本1", source: "来源描述", certainty: "高" },
+                { id: "C2", text: "在此添加结论文本2", source: "来源描述", certainty: "中" },
+                { id: "C3", text: "在此添加结论文本3", source: "来源描述", certainty: "高" }
+            ],
+            
+            tensionDescription: "在此描述检测到的潜在逻辑张力",
+            consistencyAssessment: "未发现自相矛盾的结论（因为结论数量少且均为一致的反偏颇立场）。",
+            
+            // 普适性数据
+            universalityData: [
+                { conclusion: "示例结论1", source: "理性型（对称性原则）", rating: "强普适", ratingClass: "universal-strong", reason: "基于逻辑对称性推导，适用于任何人类群体分类" },
+                { conclusion: "示例结论2", source: "经验型（未提供证据）", rating: "弱普适", ratingClass: "universal-weak", reason: "依赖历史经验归纳，但未提供证据范围" }
+            ],
+            
+            // 主体互换性数据
+            representativeConclusion: "最具代表性的结论",
+            interchangeabilityData: [
+                { replace: "示例主体A", proposition: "替换后的命题", valid: "成立" },
+                { replace: "示例主体B", proposition: "替换后的命题", valid: "不成立" }
+            ],
+            interchangeabilityAnalysis: "在此添加主体互换性分析",
+            
+            // 隐性前提数据
+            implicitPremises: [
+                { explicit: "显性论证示例", implicit: "对应的隐性前提" }
+            ],
+            
+            // 深层张力数据
+            tension1: "在此描述第一处深层张力",
+            tension2: "在此描述第二处深层张力",
+            
+            // 综合结论数据
+            traits: [
+                "系统化程度：松散",
+                "内部一致性：中等", 
+                "抽象层级：偏向具体",
+                "论证风格：混合"
+            ],
+            
+            coreCommitments: [
+                "对称公正原则：任何两组人类群体在道德特质上不应被赋予不对称的刻板印象",
+                "理性讨论的自我定位：自称具备更高理性，有权评判他人逻辑"
+            ],
+            
+            peripheralClaims: [
+                "示例边缘主张1——仅出现一次，未展开，与其核心承诺存在潜在冲突",
+                "示例边缘主张2——表达态度，非实质性观点"
+            ],
+            
+            // 置信度数据
+            confidenceLevels: {
+                completeness: "low", // low, medium, high
+                speculative: "low",
+                representativeness: "low"
+            },
+            
+            recommendation: "如需进行有意义的discourse analysis，需收集其至少数十条跨时间、跨主题的公开言论。当前语料仅适合进行'对话分析'而非'思维体系分析'。",
+            
+            // 报告元数据
+            reportDate: new Date().toLocaleDateString('zh-CN'),
+            corpusDateRange: "2026年5月9日至5月10日"
+        };
+        
+        // 初始化仪表板
+        function initDashboard() {
+            // 设置标题和副标题
+            document.querySelector("h1").innerHTML = `<i class="fas fa-chart-bar"></i> ${dashboardData.title}`;
+            document.querySelector(".subtitle").textContent = dashboardData.subtitle;
+            document.querySelector(".warning-box strong").nextSibling.textContent = ` ${dashboardData.warning}`;
+            
+            // 设置语料概述数据
+            document.getElementById("stat-comments").textContent = dashboardData.stats.comments;
+            document.getElementById("stat-timespan").textContent = dashboardData.stats.timespan;
+            document.getElementById("stat-topics").textContent = dashboardData.stats.topics;
+            document.getElementById("stat-participants").textContent = dashboardData.stats.participants;
+            document.getElementById("core-issue").textContent = dashboardData.coreIssue;
+            document.getElementById("data-source").textContent = dashboardData.dataSource;
+            document.getElementById("limitations").textContent = dashboardData.limitations;
+            
+            // 填充议题覆盖表格
+            const coverageTable = document.getElementById("coverage-table").getElementsByTagName("tbody")[0];
+            coverageTable.innerHTML = "";
+            dashboardData.coverageData.forEach(item => {
+                const row = coverageTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.issue}</td>
+                    <td><span class="tag ${item.frequencyClass}">${item.frequency}</span></td>
+                    <td>${item.detail}</td>
+                `;
+            });
+            
+            // 填充回避议题表格
+            const avoidanceTable = document.getElementById("avoidance-table").getElementsByTagName("tbody")[0];
+            avoidanceTable.innerHTML = "";
+            dashboardData.avoidanceData.forEach(item => {
+                const row = avoidanceTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.type}</td>
+                    <td>${item.manifestation}</td>
+                    <td>${item.basis}</td>
+                `;
+            });
+            
+            // 填充结论卡片
+            const conclusionsContainer = document.getElementById("conclusions-container");
+            conclusionsContainer.innerHTML = "";
+            dashboardData.conclusions.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "conclusion-card";
+                card.innerHTML = `
+                    <div class="conclusion-id">${item.id}</div>
+                    <div class="conclusion-text">${item.text}</div>
+                    <div class="conclusion-meta">
+                        <span>来源：${item.source}</span>
+                        <span>确定性：${item.certainty}</span>
+                    </div>
+                `;
+                conclusionsContainer.appendChild(card);
+            });
+            
+            // 设置逻辑一致性检测
+            document.getElementById("tension-description").textContent = dashboardData.tensionDescription;
+            document.getElementById("consistency-assessment").textContent = dashboardData.consistencyAssessment;
+            
+            // 填充普适性表格
+            const universalityTable = document.getElementById("universality-table").getElementsByTagName("tbody")[0];
+            universalityTable.innerHTML = "";
+            dashboardData.universalityData.forEach(item => {
+                const row = universalityTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.conclusion}</td>
+                    <td>${item.source}</td>
+                    <td><span class="tag ${item.ratingClass}">${item.rating}</span></td>
+                    <td>${item.reason}</td>
+                `;
+            });
+            
+            // 设置主体互换性分析
+            document.getElementById("representative-conclusion").textContent = dashboardData.representativeConclusion;
+            const interchangeabilityTable = document.getElementById("interchangeability-table").getElementsByTagName("tbody")[0];
+            interchangeabilityTable.innerHTML = "";
+            dashboardData.interchangeabilityData.forEach(item => {
+                const row = interchangeabilityTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.replace}</td>
+                    <td>${item.proposition}</td>
+                    <td>${item.valid}</td>
+                `;
+            });
+            document.getElementById("interchangeability-analysis").textContent = dashboardData.interchangeabilityAnalysis;
+            
+            // 填充隐性前提表格
+            const implicitPremisesTable = document.getElementById("implicit-premises-table").getElementsByTagName("tbody")[0];
+            implicitPremisesTable.innerHTML = "";
+            dashboardData.implicitPremises.forEach(item => {
+                const row = implicitPremisesTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.explicit}</td>
+                    <td>${item.implicit}</td>
+                `;
+            });
+            
+            // 设置深层张力
+            document.getElementById("tension-1").textContent = dashboardData.tension1;
+            document.getElementById("tension-2").textContent = dashboardData.tension2;
+            
+            // 填充特征标签
+            const traitContainer = document.getElementById("trait-container");
+            traitContainer.innerHTML = "";
+            dashboardData.traits.forEach(trait => {
+                const traitEl = document.createElement("div");
+                traitEl.className = "trait";
+                traitEl.innerHTML = `<i class="fas fa-circle"></i> ${trait}`;
+                traitContainer.appendChild(traitEl);
+            });
+            
+            // 填充核心承诺
+            const coreCommitmentsList = document.getElementById("core-commitments");
+            coreCommitmentsList.innerHTML = "";
+            dashboardData.coreCommitments.forEach(commitment => {
+                const li = document.createElement("li");
+                li.textContent = commitment;
+                coreCommitmentsList.appendChild(li);
+            });
+            
+            // 填充边缘主张
+            const peripheralClaimsList = document.getElementById("peripheral-claims");
+            peripheralClaimsList.innerHTML = "";
+            dashboardData.peripheralClaims.forEach(claim => {
+                const li = document.createElement("li");
+                li.textContent = claim;
+                peripheralClaimsList.appendChild(li);
+            });
+            
+            // 设置置信度指示器
+            const confidenceConfig = {
+                low: { class: "confidence-low", width: "20%", text: "低" },
+                medium: { class: "confidence-medium", width: "50%", text: "中" },
+                high: { class: "confidence-high", width: "80%", text: "高" }
+            };
+            
+            const completenessConf = confidenceConfig[dashboardData.confidenceLevels.completeness];
+            document.getElementById("completeness-confidence").className = `confidence-fill ${completenessConf.class}`;
+            document.getElementById("completeness-confidence").style.width = completenessConf.width;
+            document.getElementById("completeness-text").textContent = completenessConf.text;
+            
+            const speculativeConf = confidenceConfig[dashboardData.confidenceLevels.speculative];
+            document.getElementById("speculative-confidence").className = `confidence-fill ${speculativeConf.class}`;
+            document.getElementById("speculative-confidence").style.width = speculativeConf.width;
+            document.getElementById("speculative-text").textContent = speculativeConf.text;
+            
+            const representativenessConf = confidenceConfig[dashboardData.confidenceLevels.representativeness];
+            document.getElementById("representativeness-confidence").className = `confidence-fill ${representativenessConf.class}`;
+            document.getElementById("representativeness-confidence").style.width = representativenessConf.width;
+            document.getElementById("representativeness-text").textContent = representativenessConf.text;
+            
+            // 设置建议
+            document.getElementById("recommendation").textContent = dashboardData.recommendation;
+            
+            // 设置页脚日期
+            document.getElementById("report-date").textContent = dashboardData.reportDate;
+            document.getElementById("corpus-date-range").textContent = dashboardData.corpusDateRange;
+        }
+        
+        // 选项卡切换功能
+        function switchTab(tabName) {
+            // 隐藏所有选项卡内容
+            const tabContents = document.querySelectorAll('.dimension-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有选项卡的active类
+            const tabs = document.querySelectorAll('.dimension-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的选项卡内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 激活选中的选项卡
+            event.target.classList.add('active');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.init();
+            initDashboard();
+        });
+    </script>
+</body>
+</html>
